@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 """ This is a pascals triangle method """
+
+
 def pascal_triangle(n):
     """
     Generate Pascal's triangle up to n rows.
@@ -8,7 +10,8 @@ def pascal_triangle(n):
     n (int): Number of rows in the triangle. Must be an integer.
 
     Returns:
-    list: A list of lists of integers representing Pascal's triangle up to n rows.
+    list: A list of lists of integers representing
+    Pascal's triangle up to n rows.
           Returns an empty list if n <= 0.
     """
     if n <= 0:
@@ -29,4 +32,3 @@ def pascal_triangle(n):
         triangle.append(row)  # Add the row to the triangle
 
     return triangle
-
