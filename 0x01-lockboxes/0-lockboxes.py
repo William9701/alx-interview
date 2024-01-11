@@ -10,9 +10,9 @@ def canUnlockAll(boxes):
     while stack:  # Step 3: Repeat until no new boxes can be unlocked
         box = stack.pop()
         for key in boxes[box]:
-            if key not in unlocked and key < len(boxes):  # Only process valid and locked boxes
+            if key not in unlocked and key < len(boxes):
                 unlocked.add(key)  # Unlock the box
-                stack.append(key)  # Add the box to the stack to process its keys
+                stack.append(key)
 
     # Step 4: Check if all boxes have been unlocked
     return len(unlocked) == len(boxes)
