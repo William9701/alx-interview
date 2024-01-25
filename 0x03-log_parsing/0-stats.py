@@ -1,47 +1,55 @@
 #!/usr/bin/python3
-""" this is the log passing count"""
 import sys
+from collections import defaultdict
 
-
-def print_metrics(total_size, status_codes):
+def print_stats(total_size, status_code_counts):
     """
-    Print statistics
+    Print the current statistics, including total file size and status code counts.
+
+    Args:
+    - total_size (int): Total file size.
+    - status_code_counts (dict): Dictionary containing counts of different status codes.
     """
     print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
+    for code in sorted(status_code_counts):
+        print("{}: {}".format(code, status_code_counts[code]))
 
-
-def parse_line(line, total_size, status_codes):
+def main():
     """
-    Parse a log line and update statistics
+    Main function to read input from stdin, compute metrics, and print statistics.
     """
-    tokens = line.split(" ")
-    if len(tokens) > 2:
-        status_code = tokens[-2]
-        if status_code.isnumeric():
-            total_size += int(tokens[-1])
-            if status_code in status_codes:
-                status_codes[status_code] += 1
-            else:
-                status_codes[status_code] = 1
-    return total_size, status_codes
-
-
-if __name__ == "__main__":
     total_size = 0
-    status_codes = {}
+    status_code_counts = defaultdict(int)
+    line_count = 0
 
     try:
-        for i, line in enumerate(sys.stdin, 1):
-            total_size, status_codes = parse_line(
-                line.strip(), total_size, status_codes)
+        for line in sys.stdin:
+            line_count += 1
+            parts = line.split()
 
-            if i % 10 == 0:
-                print_metrics(total_size, status_codes)
+            # Check if the line follows the specified format
+            if len(parts) != 7 or parts[2] != "GET" or parts[3] != "/projects/260" or parts[4] != "HTTP/1.1":
+                continue
+
+            try:
+                file_size = int(parts[6])
+                status_code = int(parts[5])
+
+                total_size += file_size
+                status_code_counts[status_code] += 1
+
+            except ValueError:
+                pass
+
+            # Print statistics after every 10 lines
+            if line_count % 10 == 0:
+                print_stats(total_size, status_code_counts)
 
     except KeyboardInterrupt:
-        print_metrics(total_size, status_codes)
-        raise
+        pass  # Handle KeyboardInterrupt to print final statistics
+
+    print_stats(total_size, status_code_counts)
+
+if __name__ == "__main__":
+    main()
 
