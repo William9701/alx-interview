@@ -43,4 +43,3 @@ finally:
     print(f"File size: {total_size}")
     for key, val in container.items():
         print(f"{key}: {val}")
-
