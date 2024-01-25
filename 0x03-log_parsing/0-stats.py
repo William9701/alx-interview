@@ -1,43 +1,47 @@
 #!/usr/bin/python3
-"""This is the log passing module"""
+""" this is the log passing count"""
 import sys
-import re
-import signal
-
-# Initialize counters
-total_file_size = 0
-status_code_counts = {str(code): 0 for code in
-                      [200, 301, 400, 401, 403, 404, 405, 500]}
-line_count = 0
-
-# Regular expression pattern for the log format
-pattern = r'^(?P<ip>\S+) - \[(?P<date>.+)\] "GET /projects/260 HTTP/1.1" (?P<status>\d{3}) (?P<size>\d+)$'
 
 
-def print_metrics(signal=None, frame=None):
-    """This is the print function"""
-    print("File size: ", total_file_size)
-    for status, count in sorted(status_code_counts.items()):
-        if count > 0:
-            print(f"{status}: {count}")
+def print_metrics(total_size, status_codes):
+    """
+    Print statistics
+    """
+    print("File size: {}".format(total_size))
+    for code in sorted(status_codes.keys()):
+        if status_codes[code] > 0:
+            print("{}: {}".format(code, status_codes[code]))
 
 
-# Register the signal handler
-signal.signal(signal.SIGINT, print_metrics)
+def parse_line(line, total_size, status_codes):
+    """
+    Parse a log line and update statistics
+    """
+    tokens = line.split(" ")
+    if len(tokens) > 2:
+        status_code = tokens[-2]
+        if status_code.isnumeric():
+            total_size += int(tokens[-1])
+            if status_code in status_codes:
+                status_codes[status_code] += 1
+            else:
+                status_codes[status_code] = 1
+    return total_size, status_codes
 
-try:
-    for line in sys.stdin:
-        match = re.match(pattern, line.strip())
-        if match:
-            data = match.groupdict()
-            total_file_size += int(data['size'])
-            if data['status'] in status_code_counts:
-                status_code_counts[data['status']] += 1
-        line_count += 1
-        if line_count % 10 == 0:
-            print_metrics()
-except KeyboardInterrupt:
-    pass
-finally:
-    print_metrics()
+
+if __name__ == "__main__":
+    total_size = 0
+    status_codes = {}
+
+    try:
+        for i, line in enumerate(sys.stdin, 1):
+            total_size, status_codes = parse_line(
+                line.strip(), total_size, status_codes)
+
+            if i % 10 == 0:
+                print_metrics(total_size, status_codes)
+
+    except KeyboardInterrupt:
+        print_metrics(total_size, status_codes)
+        raise
 
