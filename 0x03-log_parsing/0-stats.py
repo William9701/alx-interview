@@ -1,49 +1,46 @@
 #!/usr/bin/python3
-"""
-Log parsing script
-"""
+"""This script reads lines from stdin in this format
+<IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>
+and after every 10 lines or keyboard interruption
+it prints File size: <total size>
+<status code>: <number> for every status code"""
 
-import sys
-
-
-def print_stats(total_size, status_codes):
-    """
-    Print statistics
-    """
-    print("File size: {}".format(total_size))
-    for code in sorted(status_codes.keys()):
-        if status_codes[code] > 0:
-            print("{}: {}".format(code, status_codes[code]))
+from sys import stdin
+import re
 
 
-def parse_line(line, total_size, status_codes):
-    """
-    Parse a log line and update statistics
-    """
-    tokens = line.split(" ")
-    if len(tokens) > 2:
-        status_code = tokens[-2]
-        if status_code.isnumeric():
-            total_size += int(tokens[-1])
-            if status_code in status_codes:
-                status_codes[status_code] += 1
-            else:
-                status_codes[status_code] = 1
-    return total_size, status_codes
+def format_check(line):
+    """checks if the line have a valid format"""
+    pattern = r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - '
+    r'\[([^\]]+)\] "GET \/projects\/260 HTTP\/1\.1" (\d{3}) (\d+)$'
+    match = re.match(pattern, line)
+    if match:
+        return True
+    return False
 
 
-if __name__ == "__main__":
+try:
+    container = {}
     total_size = 0
-    status_codes = {}
+    for i, line in enumerate(stdin, start=1):
+        line = line.strip()
+        if not format_check(line):
+            continue
+        args = line.split(" ")
+        total_size += int(args[-1])
+        if args[-2] not in container:
+            container[args[-2]] = 1
+        else:
+            container[args[-2]] += 1
+        container = dict(sorted(container.items()))
+        if i % 10 == 0:
+            print("File size: {}".format(total_size))
+            for key, val in container.items():
+                print(f"{key}: {val}")
+except Exception as err:
+    pass
+finally:
+    print(f"File size: {total_size}")
+    for key, val in container.items():
+        print(f"{key}: {val}")
 
-    try:
-        for i, line in enumerate(sys.stdin, 1):
-            total_size, status_codes = parse_line(
-                    line.strip(), total_size, status_codes)
-
-            if i % 10 == 0:
-                print_stats(total_size, status_codes)
-
-    except KeyboardInterrupt:
-        print_stats(total_size, status_codes)
-        raise
