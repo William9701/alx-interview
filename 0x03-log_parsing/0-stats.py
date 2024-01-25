@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+"""This is the log passing module"""
 import sys
 import re
 import signal
@@ -13,6 +15,7 @@ pattern = r'^(?P<ip>\S+) - \[(?P<date>.+)\] "GET /projects/260 HTTP/1.1" (?P<sta
 
 
 def print_metrics(signal=None, frame=None):
+    """This is the print function"""
     print("File size: ", total_file_size)
     for status, count in sorted(status_code_counts.items()):
         if count > 0:
@@ -37,5 +40,4 @@ except KeyboardInterrupt:
     pass
 finally:
     print_metrics()
-
 
