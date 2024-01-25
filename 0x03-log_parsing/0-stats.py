@@ -8,6 +8,9 @@ it prints File size: <total size>
 from sys import stdin
 import re
 
+container = {}
+total_size = 0
+
 
 def format_check(line):
     """checks if the line have a valid format"""
