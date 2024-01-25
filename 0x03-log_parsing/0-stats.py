@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""This is the log passing module"""
 import sys
 from collections import defaultdict
 
