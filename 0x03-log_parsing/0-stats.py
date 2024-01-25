@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" this is the log passing count"""
 import sys
 import re
 import signal
@@ -9,7 +11,8 @@ status_code_counts = {str(code): 0 for code in
 line_count = 0
 
 # Regular expression pattern for the log format
-pattern = r'^(?P<ip>\S+) - \[(?P<date>.+)\] "GET /projects/260 HTTP/1.1" (?P<status>\d{3}) (?P<size>\d+)$'
+pattern = r'^(?P<ip>\S+) - \[(?P<date>.+)\] "GET /projects/260 HTTP/1.1" ' \
+          r'(?P<status>\d{3}) (?P<size>\d+)$'
 
 
 def print_metrics(signal=None, frame=None):
@@ -37,5 +40,3 @@ except KeyboardInterrupt:
     pass
 finally:
     print_metrics()
-
-
