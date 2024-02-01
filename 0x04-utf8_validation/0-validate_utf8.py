@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-utf8 main file for testing
+utf8 main file for testings
 """
 
 
