@@ -3,7 +3,7 @@
 N queens puzzle
 """
 
-from sys import argv
+import sys
 
 
 def is_NQueen(cell: list) -> bool:
@@ -33,11 +33,11 @@ def solve_NQueens(dimension: int, row: int, cell: list, output: list):
             output.pop()
 
 
-if len(argv) != 2:
+if len(sys.argv) != 2:
     print('Usage: nqueens N')
     exit(1)
 try:
-    N = int(argv[1])
+    N = int(sys.argv[1])
 except BaseException:
     print('N must be a number')
     exit(1)
