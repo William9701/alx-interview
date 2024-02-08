@@ -1,91 +1,125 @@
 #!/usr/bin/python3
 """ A program that solves the N queens problem
 """
-from typing import List, Tuple
-import sys
+from sys import argv
 
 
-def print_solution(solution: List[Tuple[int, int]]) -> None:
-    """
-    Print the N-queens solution in the specified format.
+def check_row(board, index, board_len):
+    """ Check if there is a queen in the row """
+    for r in range(board_len):
+        if board[index][r]:
+            return (False)
 
-    Parameters:
-        solution (List[Tuple[int, int]]): List of queen positions.
-    """
-    for row, col in solution:
-        print(f'[{row}, {col}]', end=' ')
-    print()
+    return (True)
 
 
-def is_safe(board: List[Tuple[int, int]], row: int, col: int) -> bool:
-    """
-    Check if placing a queen at a specific position is safe.
+def check_r_angle(board, row, col, board_len):
+    """ Check if there is a queen in the left angle """
+    c = col
+    for r in range(row, -1, -1):
+        if c >= board_len:
+            break
+        if board[r][c]:
+            return (False)
+        c += 1
 
-    Parameters:
-        board (List[Tuple[int, int]]): List of queen positions.
-        row (int): The current row to check.
-        col (int): The current column to check.
+    c = col
+    for r in range(row, board_len):
+        if c < 0:
+            break
+        if board[r][c]:
+            return (False)
+        c -= 1
 
-    Returns:
-        bool: True if placing a queen is safe, False otherwise.
-    """
-    for prev_row, prev_col in board:
-        if col == prev_col or row - col == prev_row - prev_col or row + col == prev_row + prev_col:
-            return False
-    return True
-
-
-def solve_nqueens(n: int, board: List[Tuple[int, int]], row: int,
-                  solutions: List[List[Tuple[int, int]]]) -> None:
-    """
-    Recursively solve the N-queens problem and store solutions.
-
-    Parameters:
-        n (int): Size of the chessboard.
-        board (List[Tuple[int, int]]): List of queen positions.
-        row (int): Current row being processed.
-        solutions (List[List[Tuple[int, int]]]): List to store solutions.
-    """
-    if row == n:
-        solutions.append(board.copy())
-        return
-
-    for col in range(n):
-        if is_safe(board, row, col):
-            board.append((row, col))
-            solve_nqueens(n, board, row + 1, solutions)
-            board.pop()
+    return (True)
 
 
-def nqueens(N: str) -> None:
-    """
-    Main function to solve the N-queens problem.
+def check_l_angle(board, row, col, board_len):
+    """ Check if there is a queen in the right angle """
+    c = col
+    for r in range(row, -1, -1):
+        if c < 0:
+            break
+        if board[r][c]:
+            return (False)
+        c -= 1
 
-    Parameters:
-        N (str): The size of the chessboard passed as a string.
+    c = col
+    for r in range(row, board_len):
+        if c >= board_len:
+            break
+        if board[r][c]:
+            return (False)
+        c += 1
 
-    Prints:
-        All possible solutions to the N-queens problem.
-    """
-    if not N.isdigit():
+    return (True)
+
+
+def chek_all(board, r, c, n):
+    if not check_row(board, r, n):
+        return (False)
+
+    if not check_l_angle(board, r, c, n):
+        return (False)
+
+    return (check_r_angle(board, r, c, n))
+
+
+def main():
+    """ The Main Function """
+
+    argc = len(argv)
+    if argc != 2:
+        print("Usage: nqueens N")
+        exit(1)
+
+    try:
+        n = int(argv[1])
+    except Exception:
         print("N must be a number")
-        sys.exit(1)
+        exit(1)
 
-    N = int(N)
-    if N < 4:
+    if n < 4:
         print("N must be at least 4")
-        sys.exit(1)
+        exit(1)
 
-    solutions: List[List[Tuple[int, int]]] = []
-    solve_nqueens(N, [], 0, solutions)
+    n_range = range(n)
+    i = 0
+    c = 0
+    r = i
+    board = [[0 for _ in n_range] for _ in n_range]
+    result = []
+    while i < n:
+        while (c < n):
+            found = 0
 
-    for solution in solutions:
-        print_solution(solution)
+            while (r < n):
+                if chek_all(board, r, c, n):
+                    board[r][c] = 1
+                    result.append([c, r])
+                    found = 1
+                    r = 0
+                    break
+                r += 1
+
+            if not found and len(result):
+                last_i = result.pop()
+                c = last_i[0]
+                r = last_i[1] + 1
+                board[last_i[1]][last_i[0]] = 0
+                continue
+            c += 1
+
+        if len(result):
+            print(result)
+            i = result[0][1]
+            last_i = result.pop()
+            c = last_i[0]
+            r = last_i[1] + 1
+            board[last_i[1]][last_i[0]] = 0
+        else:
+            return
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-
-    nqueens(sys.argv[1])
+    main()
