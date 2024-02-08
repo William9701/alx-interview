@@ -49,6 +49,3 @@ def backtracking(r: int) -> None:
         positive_diagonal.remove(r - c)
         negative_diagonal.remove(r + c)
         board.pop()
-
-
-backtracking(0)
