@@ -1,4 +1,7 @@
 import sys
+"""
+N queens puzzle
+"""
 
 
 def print_solution(board):
