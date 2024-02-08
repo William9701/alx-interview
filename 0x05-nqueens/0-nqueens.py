@@ -2,13 +2,12 @@
 """Solve the famous N Queen Problem"""
 import sys
 
-
 if len(sys.argv) != 2:
     print("Usage: nqueens N")
     sys.exit(1)
 
 
-def print_error(message):
+def print_error(message: str) -> None:
     """Print the error message and exit with status 1"""
     print(message)
     sys.exit(1)
@@ -23,22 +22,19 @@ if n < 4:
     print_error("N must be at least 4")
 
 col = set()
-# (r - c)
 positive_diagonal = set()
-# (r + c)
 negative_diagonal = set()
-# The original board
 board = []
 
 
-def backtracking(r):
+def backtracking(r: int) -> None:
     """Backtracking function"""
     if r == n:
         print(board)
         return
     for c in range(n):
-        if c in col or (r - c) in positive_diagonal or \
-                (r + c) in negative_diagonal:
+        if c in col or (r - c) in positive_diagonal or (
+                r + c) in negative_diagonal:
             continue
 
         col.add(c)
