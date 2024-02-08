@@ -1,7 +1,7 @@
+#!/usr/bin/python3
+"""N queens puzzle"""
+
 import sys
-"""
-N queens puzzle
-"""
 
 
 def print_solution(board):
@@ -42,9 +42,9 @@ def solve_n_queens(board, col):
     return res
 
 
-def solve(N: int):
+def solve(n: int):
     """ The solve method"""
-    board = [[0] * N for _ in range(N)]
+    board = [[0] * n for _ in range(n)]
     if not solve_n_queens(board, 0):
         print("Solution does not exist")
         return
