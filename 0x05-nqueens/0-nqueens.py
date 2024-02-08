@@ -1,11 +1,14 @@
-#!/usr/bin/python3
-"""N queens puzzle"""
-
 import sys
+from typing import List
 
 
-def print_solution(board):
-    """print solution"""
+def print_solution(board: List[List[int]]) -> None:
+    """
+    Prints the solution of the N queens problem.
+
+    Args:
+        board (List[List[int]]): The chessboard represented as a 2D list.
+    """
     solution = []
     for i in range(len(board)):
         for j in range(len(board)):
@@ -14,8 +17,18 @@ def print_solution(board):
     print(solution)
 
 
-def is_safe(board, row, col):
-    """ is safe method"""
+def is_safe(board: List[List[int]], row: int, col: int) -> bool:
+    """
+    Checks if a queen can be placed at board[row][col].
+
+    Args:
+        board (List[List[int]]): The chessboard represented as a 2D list.
+        row (int): The row index.
+        col (int): The column index.
+
+    Returns:
+        bool: True if safe, False otherwise.
+    """
     for i in range(col):
         if board[row][i] == 1:
             return False
@@ -28,8 +41,17 @@ def is_safe(board, row, col):
     return True
 
 
-def solve_n_queens(board, col):
-    """ solve n queens"""
+def solve_n_queens(board: List[List[int]], col: int) -> bool:
+    """
+    Solves the N queens problem using backtracking.
+
+    Args:
+        board (List[List[int]]): The chessboard represented as a 2D list.
+        col (int): The column index.
+
+    Returns:
+        bool: True if solution exists, False otherwise.
+    """
     if col == len(board):
         print_solution(board)
         return True
@@ -42,16 +64,23 @@ def solve_n_queens(board, col):
     return res
 
 
-def solve(n: int):
-    """ The solve method"""
-    board = [[0] * n for _ in range(n)]
+def solve(N: int) -> None:
+    """
+    Solves the N queens problem.
+
+    Args:
+        N (int): The number of queens and the size of the chessboard.
+    """
+    board = [[0] * N for _ in range(N)]
     if not solve_n_queens(board, 0):
         print("Solution does not exist")
         return
-    return
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """
+    The main function that checks the command line arguments and calls the solve function.
+    """
     if len(sys.argv) != 2:
         print("Usage: nqueens N")
         sys.exit(1)
@@ -64,3 +93,7 @@ if __name__ == "__main__":
         print("N must be at least 4")
         sys.exit(1)
     solve(N)
+
+
+if __name__ == "__main__":
+    main()
