@@ -2,25 +2,23 @@
 """ A program that solves the N queens problem
 """
 from sys import argv
+from typing import List
 
-
-def check_row(board, index, board_len):
+def check_row(board: List[List[int]], index: int, board_len: int) -> bool:
     """ Check if there is a queen in the row """
     for r in range(board_len):
         if board[index][r]:
-            return (False)
+            return False
+    return True
 
-    return (True)
-
-
-def check_r_angle(board, row, col, board_len):
+def check_r_angle(board: List[List[int]], row: int, col: int, board_len: int) -> bool:
     """ Check if there is a queen in the left angle """
     c = col
     for r in range(row, -1, -1):
         if c >= board_len:
             break
         if board[r][c]:
-            return (False)
+            return False
         c += 1
 
     c = col
@@ -28,20 +26,19 @@ def check_r_angle(board, row, col, board_len):
         if c < 0:
             break
         if board[r][c]:
-            return (False)
+            return False
         c -= 1
 
-    return (True)
+    return True
 
-
-def check_l_angle(board, row, col, board_len):
+def check_l_angle(board: List[List[int]], row: int, col: int, board_len: int) -> bool:
     """ Check if there is a queen in the right angle """
     c = col
     for r in range(row, -1, -1):
         if c < 0:
             break
         if board[r][c]:
-            return (False)
+            return False
         c -= 1
 
     c = col
@@ -49,23 +46,21 @@ def check_l_angle(board, row, col, board_len):
         if c >= board_len:
             break
         if board[r][c]:
-            return (False)
+            return False
         c += 1
 
-    return (True)
+    return True
 
-
-def chek_all(board, r, c, n):
+def chek_all(board: List[List[int]], r: int, c: int, n: int) -> bool:
     if not check_row(board, r, n):
-        return (False)
+        return False
 
     if not check_l_angle(board, r, c, n):
-        return (False)
+        return False
 
-    return (check_r_angle(board, r, c, n))
+    return check_r_angle(board, r, c, n)
 
-
-def main():
+def main() -> None:
     """ The Main Function """
 
     argc = len(argv)
@@ -119,7 +114,6 @@ def main():
             board[last_i[1]][last_i[0]] = 0
         else:
             return
-
 
 if __name__ == "__main__":
     main()
