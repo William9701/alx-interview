@@ -14,17 +14,18 @@ def makeChange(coins: List[int], total: int) -> int:
     total (int): The total amount to meet.
 
     Returns:
-    int: d to meet total. If total is 0 or less, return 0.
-         If total cannot be met by any n
+    int: The fewest number of coins  less, return 0.
+         If total cannot bve, return -1.
     """
     if total <= 0:
         return 0
 
-    dp = [float('inf')] * (total + 1)
-    dp[0] = 0
-
+    coins.sort(reverse=True)
+    count = 0
     for coin in coins:
-        for i in range(coin, total + 1):
-            dp[i] = min(dp[i], dp[i - coin] + 1)
+        if total == 0:
+            break
+        num, total = divmod(total, coin)
+        count += num
 
-    return dp[total] if dp[total] != float('inf') else -1
+    return count if total == 0 else -1
