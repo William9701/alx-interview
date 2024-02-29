@@ -4,6 +4,7 @@ makeChange module
 """
 from typing import List
 
+
 def makeChange(coins: List[int], total: int) -> int:
     """
     Determine the fewest number of coins needed to meet a given amount total.
@@ -13,8 +14,8 @@ def makeChange(coins: List[int], total: int) -> int:
     total (int): The total amount to meet.
 
     Returns:
-    int: The fewest number of coins needed to meet total. If total is 0 or less, return 0.
-         If total cannot be met by any number of coins you have, return -1.
+    int: d to meet total. If total is 0 or less, return 0.
+         If total cannot be met by any n
     """
     if total <= 0:
         return 0
