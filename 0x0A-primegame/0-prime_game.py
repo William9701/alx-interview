@@ -1,29 +1,38 @@
 #!/usr/bin/python3
-"""This is the prime game module"""
+"""Prime Game"""
 
 
 def isWinner(x, nums):
-    """This is the IsWInner method"""
-    def is_prime(n):
-        """method to check if its prime"""
-        if n < 2:
-            return False
-        for i in range(2, int(n**0.5) + 1):
-            if n % i == 0:
-                return False
-        return True
-
-    def game(n):
-        """This is the game method"""
-        primes = [is_prime(i) for i in range(2, n+1)]
-        return sum(primes) % 2 == 1
-
-    Maria_wins = sum(game(n) for n in nums)
-    Ben_wins = x - Maria_wins
-
-    if Maria_wins > Ben_wins:
-        return "Maria"
-    elif Ben_wins > Maria_wins:
-        return "Ben"
-    else:
+    """Determines if a player is the winner"""
+    if x is None or nums is None or len(nums) == 0:
         return None
+    if x < 1:
+        return None
+    if x < len(nums):
+        return None
+
+    p, n = 2, max(nums)
+    b_win, m_win = 0, 0
+    primes = [True for i in range(n + 1)]
+
+    while (p * p <= n):
+        if primes[p]:
+            for i in range(p * p, n + 1, p):
+                primes[i] = False
+        p += 1
+
+    for ele in nums:
+        prime = 0
+        for i in range(2, ele + 1):
+            if primes[i]:
+                prime += 1
+        if prime % 2 == 0:
+            b_win += 1
+        else:
+            m_win += 1
+
+    if b_win > m_win:
+        return "Ben"
+    if b_win < m_win:
+        return "Maria"
+    return None
