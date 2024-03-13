@@ -3,36 +3,26 @@
 
 
 def isWinner(x, nums):
-    """Determines if a player is the winner"""
-    if x is None or nums is None or len(nums) == 0:
-        return None
-    if x < 1:
-        return None
-    if x < len(nums):
+    """Determines the winner of the game"""
+    if not nums or x < 1 or x < len(nums):
         return None
 
-    p, n = 2, max(nums)
-    b_win, m_win = 0, 0
-    primes = [True for i in range(n + 1)]
+    n = max(nums)
+    primes = [False, False] + [True for _ in range(2, n+1)]
+    p = 2
 
-    while (p * p <= n):
+    while p * p <= n:
         if primes[p]:
             for i in range(p * p, n + 1, p):
                 primes[i] = False
         p += 1
 
-    for ele in nums:
-        prime = 0
-        for i in range(2, ele + 1):
-            if primes[i]:
-                prime += 1
-        if prime % 2 == 0:
-            b_win += 1
-        else:
-            m_win += 1
+    Maria_wins = sum(sum(primes[:num+1]) % 2 != 0 for num in nums)
+    Ben_wins = x - Maria_wins
 
-    if b_win > m_win:
-        return "Ben"
-    if b_win < m_win:
+    if Maria_wins > Ben_wins:
         return "Maria"
-    return None
+    elif Ben_wins > Maria_wins:
+        return "Ben"
+    else:
+        return None
